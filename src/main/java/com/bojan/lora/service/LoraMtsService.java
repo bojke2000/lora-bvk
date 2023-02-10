@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bojan.lora.domain.LoraMtsRepository;
 import com.bojan.lora.domain.entity.LoraMts;
+import com.bojan.lora.domain.repository.LoraMtsRepository;
 
 @Service
 public class LoraMtsService {

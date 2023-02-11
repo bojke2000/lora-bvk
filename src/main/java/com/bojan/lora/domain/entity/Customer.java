@@ -19,7 +19,9 @@ import lombok.ToString;
 @ToString
 @Entity(name = "customers")
 public class Customer implements Serializable {
-
+  public static final int DEVICE_TYPA_PULSE = 1;
+  public static final int DEVICE_TYPA_INSA = 2;
+  public static final int DEVICE_TYPA_SOLAR = 3;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -30,6 +32,9 @@ public class Customer implements Serializable {
 
   @Column(name = "dev_eui")
   private String devEui;
+
+  @Column(name = "device_type")
+  private int deviceType;
 
   private String address;
 

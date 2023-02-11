@@ -19,7 +19,9 @@ import com.bojan.lora.domain.entity.LoraMts;
 import com.bojan.lora.domain.entity.Measurement;
 import com.bojan.lora.domain.lora.LoraFPort;
 import com.bojan.lora.domain.lora.LoraMtsRequest;
+import com.bojan.lora.exception.LoraException;
 import com.bojan.lora.service.CustomerService;
+import com.bojan.lora.service.DecoderService;
 import com.bojan.lora.service.LoraMtsService;
 import com.bojan.lora.service.MeasurementService;
 
@@ -40,6 +42,8 @@ public class LoraMtsController {
   private CustomerService customerService;
   @Autowired
   private MeasurementService measurementService;
+  @Autowired
+  private DecoderService decoderService;
 
   @GetMapping
   public List<LoraMts> getAllLoraMts() {
@@ -56,30 +60,19 @@ public class LoraMtsController {
     try {
       log.info("MTS Actillity LoRaWAN message: {}", loraMtsRequest.toString());
 
+      var customer = this.customerService.findByDevEui(loraMtsRequest.getDevEUIUplink().getDevEUI()).orElse(null);
+      if (customer == null) {
+        throw new LoraException("Cannot find customer with devEUI = " + loraMtsRequest.getDevEUIUplink().getDevEUI());
+      }
+
       var measurement = new Measurement();
       measurement.setDevEui(loraMtsRequest.getDevEUIUplink().getDevEUI());
       java.util.Date date = new java.util.Date();
       java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
       measurement.setReadAt(timestamp);
-
-      switch (loraMtsRequest.getDevEUIUplink().getFPort()) {
-        case LoraFPort.FPORT_1:
-          int counter = loraAdeunisDecoder.decode(loraMtsRequest.getDevEUIUplink().getPayloadHex());
-          measurement.setCounter(counter);
-          log.info("loraAdeunisDecoder: counter = " + counter);
-          break;
-
-        case LoraFPort.FPORT_14:
-          var loraFport14 = decoder.decodeF14(loraMtsRequest.getDevEUIUplink().getPayloadHex());
-          measurement.setCounter((int) loraFport14.getCounter());
-          log.info(loraFport14.toString());
-          break;
-        case LoraFPort.FPORT_24:
-          var loraFport24 = decoder.decodeF24(loraMtsRequest.getDevEUIUplink().getPayloadHex());
-          measurement.setCounter((int) loraFport24.getTotalVolume());
-          log.info(loraFport24.toString());
-          break;
-      }
+      measurement.setCounter(
+          this.decoderService.decode(loraMtsRequest.getDevEUIUplink().getPayloadHex(), customer.getDeviceType(),
+              loraMtsRequest.getDevEUIUplink().getFPort()));
 
       return this.measurementService.createMeasurement(measurement);
     } catch (Exception e) {

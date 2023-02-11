@@ -69,11 +69,11 @@ public class LoraAdeunisDecoder {
       var minValueB = Integer.parseInt(data.substring(18, 22), 16);
       log.info("{}", minValueB);
 
+      return maxValueA;
+      
     } catch (Exception e) {
       throw new LoraException(e.getMessage());
     }
-
-    return 0;
   }
 
   public static void printBits(int value) {

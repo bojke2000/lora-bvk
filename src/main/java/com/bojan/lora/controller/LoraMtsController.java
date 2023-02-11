@@ -67,6 +67,7 @@ public class LoraMtsController {
           int counter = loraAdeunisDecoder.decodeMessage46(loraMtsRequest.getDevEUIUplink().getPayloadHex());
           measurement.setCounter(counter);
           log.info("loraAdeunisDecoder: counter = " + counter);
+          break;
 
         case LoraFPort.FPORT_14:
           var loraFport14 = decoder.decodeF14(loraMtsRequest.getDevEUIUplink().getPayloadHex());

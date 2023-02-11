@@ -28,15 +28,6 @@ public class LoraCM3020Decoder {
     protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     protected DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    private static byte[] intToBytes(final int data) {
-        return new byte[]{
-                (byte) ((data >> 24) & 0xff),
-                (byte) ((data >> 16) & 0xff),
-                (byte) ((data >> 8) & 0xff),
-                (byte) ((data >> 0) & 0xff),
-        };
-    }
-
     private static byte[] shortToBytes(final short data) {
         return new byte[] {(byte)(data & 0xff), (byte)((data >> 8) & 0xff)};
     }

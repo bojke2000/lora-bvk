@@ -24,6 +24,10 @@ public class CustomerService {
   public Optional<Customer> findCustomerById(Long id) {
     return customerRepository.findById(id);
   }
+  public Optional<Customer> findByDevEui(String devEui) {
+    return customerRepository.findByDevEui(devEui);
+  }
+  
 
   public List<Customer> findAllCustomers() {
     return customerRepository.findAll();
@@ -33,7 +37,7 @@ public class CustomerService {
     return customerRepository.save(customer);
   }
 
-  public void deleteCustomer(Customer customer) {
-    customerRepository.delete(customer);
+  public void deleteCustomer(long customerId) {
+    customerRepository.deleteById(customerId);
   }
 }

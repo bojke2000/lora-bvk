@@ -4,20 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bojan.lora.component.LoraAdeunisDecoder;
-import com.bojan.lora.component.LoraCM3020Decoder;
 import com.bojan.lora.domain.entity.LoraMts;
 import com.bojan.lora.domain.entity.Measurement;
-import com.bojan.lora.domain.lora.LoraFPort;
 import com.bojan.lora.domain.lora.LoraMtsRequest;
 import com.bojan.lora.exception.LoraException;
 import com.bojan.lora.service.CustomerService;
@@ -34,10 +29,6 @@ public class LoraMtsController {
 
   @Autowired
   private LoraMtsService loraMtsService;
-  @Autowired
-  private LoraCM3020Decoder decoder;
-  @Autowired
-  private LoraAdeunisDecoder loraAdeunisDecoder;
   @Autowired
   private CustomerService customerService;
   @Autowired
@@ -80,15 +71,5 @@ public class LoraMtsController {
     }
 
     return null;
-  }
-
-  @PutMapping("/{id}")
-  public LoraMts updateLoraMts(@PathVariable Long id, @RequestBody LoraMts loraMts) {
-    return loraMtsService.updateLoraMts(id, loraMts);
-  }
-
-  @DeleteMapping("/{id}")
-  public void deleteLoraMts(@PathVariable Long id) {
-    loraMtsService.deleteLoraMts(id);
   }
 }

@@ -43,7 +43,7 @@ public class Customer implements Serializable {
   private String note;
 
   @OneToMany
-  @JoinColumn(name="dev_eui", referencedColumnName = "dev_eui")
+  @JoinColumn(name="customer_id", referencedColumnName = "id")
   private List<Measurement> measurements;
 
 }

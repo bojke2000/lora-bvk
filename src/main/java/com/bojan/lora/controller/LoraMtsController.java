@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bojan.lora.domain.entity.Customer;
 import com.bojan.lora.domain.entity.LoraMts;
 import com.bojan.lora.domain.entity.Measurement;
 import com.bojan.lora.domain.lora.LoraMtsRequest;
@@ -51,13 +52,27 @@ public class LoraMtsController {
     try {
       log.info("MTS Actillity LoRaWAN message: {}", loraMtsRequest.toString());
 
-      var customer = this.customerService.findByDevEui(loraMtsRequest.getDevEUIUplink().getDevEUI()).orElse(null);
+      if (loraMtsRequest.getDevEUIUplink() == null) {
+        log.error("DevEUIUplink is null " + loraMtsRequest.toString());
+        return null;
+      }
+
+      var devEUI = loraMtsRequest.getDevEUIUplink().getDevEUI();
+      if (devEUI == null) {
+        log.error("devEUI doesnt exist for " + loraMtsRequest.toString());
+        return null;
+      }
+
+      var customerOpt = this.customerService.findByDevEui(devEUI);
+      Customer customer = customerOpt.orElse(null);
       if (customer == null) {
-        throw new LoraException("Cannot find customer with devEUI = " + loraMtsRequest.getDevEUIUplink().getDevEUI());
+        log.error("Cannot find customer with devEUI = " + loraMtsRequest.getDevEUIUplink().getDevEUI());
+        return null;
       }
 
       var measurement = new Measurement();
-      measurement.setDevEui(loraMtsRequest.getDevEUIUplink().getDevEUI());
+      // measurement.setDevEui(loraMtsRequest.getDevEUIUplink().getDevEUI());
+      measurement.setCustomerId(customer.getId());
       java.util.Date date = new java.util.Date();
       java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
       measurement.setReadAt(timestamp);
@@ -67,7 +82,7 @@ public class LoraMtsController {
 
       return this.measurementService.createMeasurement(measurement);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
     }
 
     return null;

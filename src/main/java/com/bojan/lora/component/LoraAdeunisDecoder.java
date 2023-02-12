@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class LoraAdeunisDecoder {
+public class LoraAdeunisDecoder extends CommonDecoder {
 
   private static final byte FRAME_CODE_46 = 0x46;
   private static final byte FRAME_CODE_30 = 0x30;
@@ -58,7 +58,7 @@ public class LoraAdeunisDecoder {
 
       var status = Integer.parseInt(data.substring(2, 4), 16);
       var alarms = Integer.parseInt(data.substring(4, 6), 16);
-      printBits(alarms);
+      CommonDecoder.printBits(alarms);
       var maxValueA = Integer.parseInt(data.substring(6, 10), 16);
       log.info("{}", maxValueA);
       var maxValueB = Integer.parseInt(data.substring(10, 14), 16);
@@ -70,17 +70,10 @@ public class LoraAdeunisDecoder {
       log.info("{}", minValueB);
 
       return maxValueA;
-      
+
     } catch (Exception e) {
       throw new LoraException(e.getMessage());
     }
-  }
-
-  public static void printBits(int value) {
-    for (int i = 31; i >= 0; i--) {
-      System.out.print((value >> i) & 1);
-    }
-    System.out.println();
   }
 
   public static void main(String[] args) {

@@ -23,11 +23,8 @@ public class Measurement implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  // @ManyToOne
-  // @JoinColumn(name = "dev_eui", referencedColumnName = "dev_eui", nullable = false)
-  // private Customer customer;
-  @Column(name = "dev_eui")
-  private String devEui;
+  @Column(name = "customer_id")
+  private Long customerId;
 
   private Integer counter;
 

@@ -43,15 +43,15 @@ public class LoraCM3020Decoder extends CommonDecoder {
     }
 
     public String decodeRegister(String message, int startByte) {
-        String p4 = flipChars(message, startByte, 2);
-        String p3 = flipChars(message, startByte + 2, 2);
-        String p2 = flipChars(message, startByte + 4, 2);
-        String p1 = flipChars(message, startByte + 6, 2);
+        String p4 = flipHexaChars(message, startByte, 2);
+        String p3 = flipHexaChars(message, startByte + 2, 2);
+        String p2 = flipHexaChars(message, startByte + 4, 2);
+        String p1 = flipHexaChars(message, startByte + 6, 2);
         StringBuilder register = new StringBuilder(p1).append(p2).append(p3).append(p4);
         return register.toString();
     }
 
-    public String flipChars(String message, int startChar, int n) {
+    public String flipHexaChars(String message, int startChar, int n) {
         StringBuilder sb = new StringBuilder();
         for (int ii = n; ii > 0; ii = ii - 2) {
             sb.append(message.substring(startChar + ii - 2, startChar + ii));

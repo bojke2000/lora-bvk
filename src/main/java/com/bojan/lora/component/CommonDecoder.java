@@ -48,7 +48,7 @@ public class CommonDecoder {
         return rezz;
     }
 
-    public String flipChars(String message, int startChar, int n) {
+    public String flipHexaChars(String message, int startChar, int n) {
         StringBuilder sb = new StringBuilder();
         for (int ii=n; ii > 0; ii = ii -2) {
            sb.append(message.substring(startChar + ii -2, startChar + ii));

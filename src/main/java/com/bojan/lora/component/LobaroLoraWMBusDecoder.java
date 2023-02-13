@@ -32,7 +32,7 @@ public class LobaroLoraWMBusDecoder extends CommonDecoder {
   }
 
   private int decodePort11(String payload) {
-    String pls1 = flipChars(payload, 32, 8);
+    String pls1 = flipHexaChars(payload, 32, 8);
     byte[] bytes = hexStringToByteArray(pls1);
     return BCD.decode(bytes).intValue();
   }

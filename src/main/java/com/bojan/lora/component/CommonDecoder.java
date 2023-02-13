@@ -19,12 +19,13 @@ public class CommonDecoder {
         System.out.println();
     }
 
-    protected void printBites(byte[] bytes) {
+    protected String printBites(byte[] bytes) {
         String out = new String();
         for (byte b : bytes) {
             out += Integer.toBinaryString(b & 255 | 256).substring(1) + " ";
         }
         System.out.println(out);
+        return out;
     }
 
     public byte[] hexStringToByteArray(String hexString) {
@@ -74,13 +75,14 @@ public class CommonDecoder {
     protected LocalDateTime decodeDatetime(String msg, int startChar) {
         LocalDateTime rezz = null;
 
-        var dt1 = msg.substring(startChar, startChar + 2);
-        var dt2 = msg.substring(startChar + 2, startChar + 4);
+        var dt4 = msg.substring(startChar, startChar + 2);
+        var dt3 = msg.substring(startChar + 2, startChar + 4);
+        var dt2 = msg.substring(startChar + 4, startChar + 6);
+        var dt1 = msg.substring(startChar + 6, startChar + 8);
+
         int minutes = Integer.parseInt(dt1, 16) & 0x3F;
         int hours = Integer.parseInt(dt2, 16) & 0x3F;
 
-        var dt3 = msg.substring(startChar + 4, startChar + 6);
-        var dt4 = msg.substring(startChar + 6, startChar + 8);
         var firstTwoBytes = Integer.parseInt(dt3, 16);
         var secondTwoBytes = Integer.parseInt(dt4, 16);
 
@@ -106,8 +108,9 @@ public class CommonDecoder {
 
     protected LocalDate decodeDate(String msg, int startChar) {
         LocalDate rezz = null;
-        var dt3 = msg.substring(startChar, startChar + 2);
-        var dt4 = msg.substring(startChar + 2, startChar + 4);
+        var dt4 = msg.substring(startChar, startChar + 2);
+        var dt3 = msg.substring(startChar + 2, startChar + 4);
+        
         var firstTwoBytes = Integer.parseInt(dt3, 16);
         var secondTwoBytes = Integer.parseInt(dt4, 16);
 

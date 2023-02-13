@@ -68,21 +68,17 @@ public class LoraCM3020Decoder extends CommonDecoder {
         byte[] alarmLE = new byte[2];
         var alarmBE = flipBytes(bytes, 0, 2);
         printBites(alarmBE);
-        // printBites(bytes);
-        // printBites(alarmBE);
         ByteBuffer buffer = ByteBuffer.wrap(alarmBE);
         short alarms = buffer.getShort();
+        String alarm = printBites(buffer.array());
+        System.out.printf("Alarms %s \n", alarm);
         loraFPort24.setAlarms(alarms);
         loraFPort24.setDateTime(decodeDatetime(hexString, 4));
         byte[] battery = new byte[1];
         battery[0] = bytes[6];
-        // printBites(battery);
-        // System.out.printf("BCD.decode battery %d\n",
-        // Short.valueOf(Hex.encodeHexString(battery), 16));
         loraFPort24.setBattery(Short.valueOf(Hex.encodeHexString(battery), 16) / 2);
         byte[] temperature = new byte[1];
         temperature[0] = bytes[7];
-        // printBites(temperature);
         loraFPort24.setTemperature(Short.valueOf(Hex.encodeHexString(temperature), 16));
         var volume = flipBytes(bytes, 8, 4);
         loraFPort24.setTotalVolume(BCD.decode(volume).intValue());
@@ -222,11 +218,12 @@ public class LoraCM3020Decoder extends CommonDecoder {
             // System.out.println(decoder.decodeF14("62761200"));
             // System.out.println(decoder.decodeF14("57140000"));
             // System.out.println(decoder.decodeF14("51598699"));
-            System.out.println(decoder.decodeF14("29289999"));
-            System.out.println(decoder.decodeF14("98113364"));
-            System.out.println(decoder.decodeF14("43992934"));
+            // System.out.println(decoder.decodeF14("29289999"));
+            // System.out.println(decoder.decodeF14("98113364"));
+            // System.out.println(decoder.decodeF14("43992934"));
 
-            System.out.println(decoder.decodeF24("91f0280dd115de35981133644399293448b7"));
+            // System.out.println(decoder.decodeF24("91f0280dd115de35981133644399293448b7"));
+            System.out.println(decoder.decodeF24("0030120e1225481429289999606423008cdd"));
 
             // System.out.println(decoder.decodeF24("ADguCAEhSBRkAAAACgAAAAEh"));
             // System.out.println(decoder.decodeF24("8y0NABF/QbQFAAAAAQAAABB/"));

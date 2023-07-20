@@ -78,9 +78,11 @@ public class LoraAdeunisDecoder extends CommonDecoder {
 
   public static void main(String[] args) {
     String message46 = "462000015C4F0000F74A";
-    String message30 = "30e0000c00080005000700";
+    String message30 = "3040000c00080005000700";
+    String msg = "4060000100000001000000";
     var decoder = new LoraAdeunisDecoder();
-    // System.out.println(decoder.decodeMessage46(message46));
+    System.out.println(decoder.decodeMessage46(message46));
+    // System.out.println(decoder.decode(msg));
     System.out.println(decoder.decodeMessage30(message30));
 
   }

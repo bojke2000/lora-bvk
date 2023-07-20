@@ -16,6 +16,25 @@ VALUES (30215423, '47043/0', '5', 2, 'Mis Irbijeva br. 59', '"EWT" - DN 65', 'ko
 INSERT INTO customers (device_id, reg, dev_eui, device_type, address, profile, note)
 VALUES (30221062, '76810/0', '6', 2, 'Bulevar despota Stefana br. 68a', '"EWT" - DN 65', 'korisnik stambena zgrada');
 
+INSERT INTO customers (device_id, reg, dev_eui, device_type, address, profile, note)
+VALUES (3832958, '19132/0', '70B3D5C20000730E', 2, 'Vojvode skopljanca BB', '"INSA" - DN 40', 'korisnik JKP Beogradske pijace');
+
+INSERT INTO customers (device_id, reg, dev_eui, device_type, address, profile, note)
+VALUES (60062440, '73482/0', '70B3D5C2000072F6', 2, 'Bazdarnica BVK', '"Diehl" - DN 20', 'korisnik stambena zgrada');
+
+INSERT INTO customers (device_id, reg, dev_eui, device_type, address, profile, note)
+VALUES (60062440, '73483/0', '70B3D5C20000736D', 2, 'Bazdarnica BVK', '"Diehl" - DN 20', 'korisnik stambena zgrada');
+
+INSERT INTO customers (device_id, reg, dev_eui, device_type, address, profile, note)
+VALUES (60062440, '73483/0', '70B3D5C2000072A8', 2, 'Bazdarnica BVK', '"Diehl" - DN 20', 'korisnik stambena zgrada');
+
+INSERT INTO customers (device_id, reg, dev_eui, device_type, address, profile, note)
+VALUES (60062440, '73483/0', '70B3D5C200007382', 2, 'Bazdarnica BVK', '"Diehl" - DN 20', 'korisnik stambena zgrada');
+
+INSERT INTO customers (device_id, reg, dev_eui, device_type, address, profile, note)
+VALUES (60062440, '73483/0', '70B3D5C2000072C1', 2, 'Bazdarnica BVK', '"Diehl" - DN 20', 'korisnik stambena zgrada');
+
+
 
 CREATE TABLE customers (
   id BIGSERIAL NOT NULL,

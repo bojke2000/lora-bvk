@@ -1,27 +1,18 @@
 package com.bojan.lora.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.bojan.lora.domain.entity.Customer;
+import com.bojan.lora.domain.dto.MqttUplinkMessage;
 import com.bojan.lora.domain.entity.LoraMts;
 import com.bojan.lora.domain.entity.Measurement;
 import com.bojan.lora.domain.lora.LoraMtsRequest;
-import com.bojan.lora.exception.LoraException;
-import com.bojan.lora.service.CustomerService;
-import com.bojan.lora.service.DecoderService;
-import com.bojan.lora.service.LoraMtsService;
-import com.bojan.lora.service.MeasurementService;
-
+import com.bojan.lora.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.support.json.JsonObjectMapper;
+import org.springframework.integration.support.json.JsonObjectMapperProvider;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,11 +22,8 @@ public class LoraMtsController {
   @Autowired
   private LoraMtsService loraMtsService;
   @Autowired
-  private CustomerService customerService;
-  @Autowired
-  private MeasurementService measurementService;
-  @Autowired
-  private DecoderService decoderService;
+  private MqttService mqttService;
+  private JsonObjectMapper objectMapper = JsonObjectMapperProvider.newInstance();
 
   @GetMapping
   public List<LoraMts> getAllLoraMts() {
@@ -63,24 +51,12 @@ public class LoraMtsController {
         return null;
       }
 
-      var customerOpt = this.customerService.findByDevEui(devEUI);
-      Customer customer = customerOpt.orElse(null);
-      if (customer == null) {
-        log.error("Cannot find customer with devEUI = " + loraMtsRequest.getDevEUIUplink().getDevEUI());
-        return null;
-      }
+      MqttUplinkMessage mqttUplinkMessage = new MqttUplinkMessage();
+      mqttUplinkMessage.setDevEUI(devEUI);
+      mqttUplinkMessage.setFPort(loraMtsRequest.getDevEUIUplink().getFPort());
+      mqttUplinkMessage.setData(loraMtsRequest.getDevEUIUplink().getPayloadHex());
+      mqttService.publish(objectMapper.toJson(mqttUplinkMessage));
 
-      var measurement = new Measurement();
-      // measurement.setDevEui(loraMtsRequest.getDevEUIUplink().getDevEUI());
-      measurement.setCustomerId(customer.getId());
-      java.util.Date date = new java.util.Date();
-      java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-      measurement.setReadAt(timestamp);
-      measurement.setCounter(
-          this.decoderService.decode(loraMtsRequest.getDevEUIUplink().getPayloadHex(), customer.getDeviceType(),
-              loraMtsRequest.getDevEUIUplink().getFPort()));
-
-      return this.measurementService.createMeasurement(measurement);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }

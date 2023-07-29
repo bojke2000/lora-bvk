@@ -1,7 +1,7 @@
 logback:
     configurationFile: classpath:logback-spring.xml
 logging:
-    file: insa.log
+    file: mts-bridge.log
     file.path: logs/
     level:
         root: INFO

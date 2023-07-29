@@ -1,11 +1,14 @@
 package com.bojan.lora.service;
 
 import org.eclipse.paho.client.mqttv3.*;
+import org.springframework.beans.factory.annotation.Value;
 
 public class MqttService {
 
     private MqttClient mqttClient;
+    @Value("${mqtt.broker.url}")
     private String brokerUrl = "tcp://mqtt.eclipse.org:1883"; // Replace with your MQTT broker URL
+    @Value("${mqtt.topic}")
     private String topic = "test/topic"; // Replace with the topic you want to publish to
     private String message = "Hello, MQTT!"; // Replace with the message you want to publish
 

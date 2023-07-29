@@ -1,0 +1,23 @@
+logback:
+    configurationFile: classpath:logback-spring.xml
+logging:
+    file: insa.log
+    file.path: logs/
+    level:
+        root: INFO
+    pattern:
+        console: '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+        file: '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+server:
+    address: 212.200.75.41
+spring:
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        password: yt1drdk1961
+        url: jdbc:postgresql://localhost:5432/insa
+        username: insa2023
+    jpa:
+        show-sql: true
+mqtt:
+    broker.url: 'tcp://mqtt.eclipse.org:1883'
+    topic: 'test/topic'

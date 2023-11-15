@@ -15,7 +15,6 @@ import com.bojan.lora.domain.entity.Customer;
 import com.bojan.lora.domain.entity.LoraMts;
 import com.bojan.lora.domain.entity.Measurement;
 import com.bojan.lora.domain.lora.LoraMtsRequest;
-import com.bojan.lora.exception.LoraException;
 import com.bojan.lora.service.CustomerService;
 import com.bojan.lora.service.DecoderService;
 import com.bojan.lora.service.LoraMtsService;

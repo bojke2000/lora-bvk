@@ -11,13 +11,6 @@ logging:
 server:
     port: 7788
 spring:
-    datasource:
-        driver-class-name: org.postgresql.Driver
-        password: yt1drdk1961
-        url: jdbc:postgresql://localhost:5432/insa
-        username: insa2023
-    jpa:
-        show-sql: true
 mqtt:
     broker.url: 'tcp://5.189.134.159:1883'
     topic: 'application/mts'

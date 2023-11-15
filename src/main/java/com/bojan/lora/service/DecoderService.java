@@ -1,12 +1,12 @@
 package com.bojan.lora.service;
 
+import com.bojan.lora.domain.entity.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bojan.lora.component.LobaroLoraWMBusDecoder;
 import com.bojan.lora.component.LoraAdeunisDecoder;
 import com.bojan.lora.component.LoraCM3020Decoder;
-import com.bojan.lora.domain.entity.Customer;
 import com.bojan.lora.domain.lora.LoraFPort;
 
 import lombok.extern.slf4j.Slf4j;

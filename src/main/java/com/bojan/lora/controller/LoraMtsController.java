@@ -18,9 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/loramts")
 public class LoraMtsController {
-
-  @Autowired
-  private LoraMtsService loraMtsService;
   @Autowired
   private MqttService mqttService;
   private JsonObjectMapper objectMapper = JsonObjectMapperProvider.newInstance();
@@ -28,11 +25,6 @@ public class LoraMtsController {
   @GetMapping
   public List<LoraMts> getAllLoraMts() {
     return new ArrayList<LoraMts>();
-  }
-
-  @GetMapping("/{id}")
-  public LoraMts getLoraMtsById(@PathVariable Long id) {
-    return loraMtsService.getLoraMtsById(id);
   }
 
   @PostMapping

@@ -12,7 +12,6 @@ public class MqttService {
     private String brokerUrl; // Replace with your MQTT broker URL
     @Value("${mqtt.topic}")
     private String topic; // Replace with the topic you want to publish to
-    private String message = "Hello, MQTT!"; // Replace with the message you want to publish
 
     public MqttService() {}
 

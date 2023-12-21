@@ -12,6 +12,7 @@ import org.springframework.integration.support.json.JsonObjectMapperProvider;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -46,7 +47,7 @@ public class LoraMtsController {
       MqttUplinkMessage mqttUplinkMessage = new MqttUplinkMessage();
       mqttUplinkMessage.setDevEUI(devEUI);
       mqttUplinkMessage.setFPort(loraMtsRequest.getDevEUIUplink().getFPort());
-      mqttUplinkMessage.setData(loraMtsRequest.getDevEUIUplink().getPayloadHex());
+      mqttUplinkMessage.setData(Base64.getEncoder().encodeToString(loraMtsRequest.getDevEUIUplink().getPayloadHex().getBytes()));
       mqttService.publish(objectMapper.toJson(mqttUplinkMessage));
 
     } catch (Exception e) {

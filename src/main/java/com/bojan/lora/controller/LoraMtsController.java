@@ -45,7 +45,7 @@ public class LoraMtsController {
       }
 
       MqttUplinkMessage mqttUplinkMessage = new MqttUplinkMessage();
-      mqttUplinkMessage.setDevEUI(devEUI);
+      mqttUplinkMessage.setDevEUI(devEUI.toLowerCase());
       mqttUplinkMessage.setFPort(loraMtsRequest.getDevEUIUplink().getFPort());
       mqttUplinkMessage.setData(Base64.getEncoder().encodeToString(loraMtsRequest.getDevEUIUplink().getPayloadHex().getBytes()));
       mqttService.publish(objectMapper.toJson(mqttUplinkMessage));

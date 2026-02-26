@@ -1,13 +1,19 @@
 package com.bojan.lora.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PreDestroy;
+import java.nio.charset.StandardCharsets;
+
 @Service
+@Slf4j
 public class MqttService {
 
     private MqttClient mqttClient;
+    private final Object mqttClientLock = new Object();
     @Value("${mqtt.broker.url}")
     private String brokerUrl; // Replace with your MQTT broker URL
     @Value("${mqtt.topic}")
@@ -16,44 +22,75 @@ public class MqttService {
     public MqttService() {}
 
     public void connect() {
-        String clientId = MqttClient.generateClientId();
+        synchronized (mqttClientLock) {
+            if (mqttClient != null && mqttClient.isConnected()) {
+                return;
+            }
+            closeClientQuietly();
 
-        try {
-            mqttClient = new MqttClient(brokerUrl, clientId);
-            MqttConnectOptions connectOptions = new MqttConnectOptions();
-            connectOptions.setCleanSession(true);
-
-            mqttClient.connect(connectOptions);
-
-
-        } catch (MqttException e) {
-            e.printStackTrace();
+            String clientId = MqttClient.generateClientId();
+            try {
+                MqttClient newClient = new MqttClient(brokerUrl, clientId);
+                MqttConnectOptions connectOptions = new MqttConnectOptions();
+                connectOptions.setCleanSession(true);
+                connectOptions.setAutomaticReconnect(true);
+                newClient.connect(connectOptions);
+                mqttClient = newClient;
+            } catch (MqttException e) {
+                log.error("Unable to connect MQTT client to broker {}", brokerUrl, e);
+                mqttClient = null;
+            }
         }
     }
 
     public void publish(String message) {
+        if (mqttClient == null || !mqttClient.isConnected()) {
+            connect();
+        }
+
+        if (mqttClient == null || !mqttClient.isConnected()) {
+            log.warn("Skipping publish because MQTT client is not connected");
+            return;
+        }
+
         try {
-
-            if (this.mqttClient == null || !this.mqttClient.isConnected()) {
-                this.connect();
-            }
-
-            MqttMessage mqttMessage = new MqttMessage(message.getBytes());
+            MqttMessage mqttMessage = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
             mqttClient.publish(topic, mqttMessage);
-
-            System.out.println("Message published: " + message);
-        } catch (Exception e) {
+            log.debug("Message published to topic {}", topic);
+        } catch (MqttException e) {
+            log.error("Failed to publish message to topic {}", topic, e);
         }
     }
 
     public void stop() {
+        synchronized (mqttClientLock) {
+            closeClientQuietly();
+            mqttClient = null;
+        }
+    }
+
+    @PreDestroy
+    public void onShutdown() {
+        stop();
+    }
+
+    private void closeClientQuietly() {
+        if (mqttClient == null) {
+            return;
+        }
+
         try {
-            if (mqttClient != null) {
+            if (mqttClient.isConnected()) {
                 mqttClient.disconnect();
-                mqttClient.close();
             }
         } catch (MqttException e) {
-            e.printStackTrace();
+            log.warn("Error disconnecting MQTT client", e);
+        } finally {
+            try {
+                mqttClient.close();
+            } catch (MqttException e) {
+                log.warn("Error closing MQTT client", e);
+            }
         }
     }
 }
